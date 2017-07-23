@@ -1,3 +1,5 @@
 chromedata
 .vscode
 .git
+codeship.aes
+dockercfg.json

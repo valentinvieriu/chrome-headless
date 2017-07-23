@@ -1,0 +1,8 @@
+version: '3.3'
+
+services:
+  chrome-headless:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      encrypted_args_file: env.encrypted

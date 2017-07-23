@@ -1,24 +1,27 @@
-version: '2'
+version: '3.3'
 services:
   chrome-headless:
     container_name: chrome-headless
-    image: valentinvieriu/chrome-headless
-    # image: alpeware/chrome-headless-trunk
-    # image: yukinying/chrome-headless-browser
-    # image: justinribeiro/chrome-headless
+    image: valentinvieriu/chrome-headless:${CHROME_VERSION}
     # security_opt: 
     #   - "seccomp=./chrome.json"
+    # privileged: true
+    shm_size: 2G
+    restart: always
     cap_add: 
       - SYS_ADMIN
-    build: .
-    # privileged: true
-    restart: always
-    shm_size: 2G
-    mem_limit: 4G
-    # memswap_limit: 0
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - CHROME_VERSION=${CHROME_VERSION}
+    deploy:
+      resources:
+        memory: 4G
+        swap: 4G
     command: '--ignore-certificate-errors --no-sandbox --headless --disable-gpu --hide-scrollbars -incognito --window-size=1280,1280 --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222'
     labels:
-        - "traefik.enable=false"
+        - "traefik.enable=${ENABLE_TRAEFIK}"
         - "traefik.port=${DEBUG_PORT}"
         - "traefik.frontend.rule=Host:chrome-headless.${TLD}"
     # ports:
@@ -28,4 +31,4 @@ services:
 networks:
   default:
     external:
-      name: mainframe_default
+      name: ${DOCKER_NETWORK_NAME}

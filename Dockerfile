@@ -1,8 +1,6 @@
 # Run Chrome Headless in a container
 #
-# What was once a container using the experimental build of headless_shell from
-# tip, this container now runs and exposes stable Chrome headless via 
-# google-chome --headless.
+# Inspired by https://raw.githubusercontent.com/justinribeiro/dockerfiles/master/chrome-headless
 #
 # What's New 
 # 
@@ -12,20 +10,23 @@
 #
 #
 # To run (without seccomp):
-# docker run -d -p 9222:9222 --cap-add=SYS_ADMIN justinribeiro/chrome-headless
+# docker run -d -p 9222:9222 --cap-add=SYS_ADMIN valentinvieriu/chrome-headless
 # 
 # To run a better way (with seccomp):
-# docker run -d -p 9222:9222 --security-opt seccomp=$HOME/chrome.json justinribeiro/chrome-headless 
+# docker run -d -p 9222:9222 --security-opt seccomp=$HOME/chrome.json valentinvieriu/chrome-headless 
 #
 # Basic use: open Chrome, navigate to http://localhost:9222/
 #
 
-# Base docker image https://raw.githubusercontent.com/justinribeiro/dockerfiles/master/chrome-headless/Dockerfile
+# Base docker image 
 FROM debian:sid
 LABEL name="chrome-headless" \ 
-			maintainer="Justin Ribeiro <justin@justinribeiro.com>" \
-			version="1.4" \
+			maintainer="Valentin Vieriu<valentin.vieriu@gmail.com>" \
+			version="1.0" \
 			description="Google Chrome Headless in a container"
+
+ARG CHROME_VERSION=59.0.3071.115-1
+ENV CHROME_VERSION $CHROME_VERSION
 
 # Install deps + add Chrome Stable + purge all the things
 RUN apt-get update && apt-get install -y \
@@ -37,7 +38,7 @@ RUN apt-get update && apt-get install -y \
 	&& curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
 	&& echo "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
 	&& apt-get update && apt-get install -y \
-	google-chrome-stable \
+	google-chrome-stable=$CHROME_VERSION \
 	--no-install-recommends \
 	&& apt-get purge --auto-remove -y curl gnupg \
 	&& rm -rf /var/lib/apt/lists/*

@@ -1,2 +1,4 @@
 chromedata
 .env
+codeship.aes
+dockercfg.json
