@@ -1,0 +1,31 @@
+version: '2'
+services:
+  chrome-headless:
+    container_name: chrome-headless
+    image: valentinvieriu/chrome-headless
+    # image: alpeware/chrome-headless-trunk
+    # image: yukinying/chrome-headless-browser
+    # image: justinribeiro/chrome-headless
+    # security_opt: 
+    #   - "seccomp=./chrome.json"
+    cap_add: 
+      - SYS_ADMIN
+    build: .
+    # privileged: true
+    restart: always
+    shm_size: 2G
+    mem_limit: 4G
+    # memswap_limit: 0
+    command: '--ignore-certificate-errors --no-sandbox --headless --disable-gpu --hide-scrollbars -incognito --window-size=1280,1280 --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222'
+    labels:
+        - "traefik.enable=false"
+        - "traefik.port=${DEBUG_PORT}"
+        - "traefik.frontend.rule=Host:chrome-headless.${TLD}"
+    # ports:
+    #   - '${DEBUG_PORT}:${DEBUG_PORT}'
+    volumes: 
+      - ${ROOT_FOLDER}/chromedata:/data
+networks:
+  default:
+    external:
+      name: mainframe_default
