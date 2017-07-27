@@ -6,3 +6,5 @@ services:
       context: .
       dockerfile: Dockerfile
       encrypted_args_file: env.encrypted
+    cached: true
+    default_cache_branch: "master"
