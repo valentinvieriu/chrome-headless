@@ -17,6 +17,8 @@ DOCKER_NETWORK_NAME=mainframe_default
 
 If you change any of those ENV don't forget to update the encrypted ones for the CI `jet encrypt .env env.encrypted`. This is necesarry only if you are using the Codeship CI.
 
+Also for Codeship make sure you are pushing the version tag also to trigger the build for the version
+
 To build your own version: `docker-compose build`
 
 To start `docker-compose up -d`
